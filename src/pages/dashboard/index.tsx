@@ -1,10 +1,13 @@
 import { useSession } from "next-auth/react";
+import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 
 export default function Dashboard() {
   const { data: session, status } = useSession();
   const router = useRouter();
+
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (status === "unauthenticated") {
@@ -25,7 +28,7 @@ export default function Dashboard() {
       <div className="max-w-7xl mx-auto">
         <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
         <p className="mt-4 text-gray-600">
-          Welcome back, {session?.user?.name}!
+          {t("hello")} {session?.user?.name}!
         </p>
       </div>
     </div>

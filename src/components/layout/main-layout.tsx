@@ -3,6 +3,10 @@ import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { ROUTES } from "../../constants/routes";
+import { LanguageSwitcher } from "../language-switcher";
+import { useAppDispatch } from "@/store/store";
+import { setLanguage } from "@/store/slices/app.slice";
+import { useTranslation } from "react-i18next";
 
 export default function MainLayout({
   children,
@@ -11,7 +15,16 @@ export default function MainLayout({
 }) {
   const { data: session } = useSession();
   const router = useRouter();
+  const dispatch = useAppDispatch();
   const [isScrolled, setIsScrolled] = useState(false);
+  const { t } = useTranslation();
+
+  // Sync Redux language state with router locale
+  useEffect(() => {
+    if (router.locale) {
+      dispatch(setLanguage(router.locale as "en" | "vi"));
+    }
+  }, [router.locale, dispatch]);
 
   const handleSignOut = async () => {
     await signOut();
@@ -77,7 +90,7 @@ export default function MainLayout({
                     : "text-gray-500 hover:text-gray-900"
                 }`}
               >
-                Dashboard
+                {t("dashboard")}
               </Link>
               <Link
                 href={ROUTES.PRODUCTS.LIST()}
@@ -89,12 +102,13 @@ export default function MainLayout({
                     : "text-gray-500 hover:text-gray-900"
                 }`}
               >
-                Products
+                {t("products")}
               </Link>
             </nav>
 
             {/* Auth Buttons */}
             <div className="flex items-center space-x-4">
+              <LanguageSwitcher />
               {session ? (
                 <>
                   <Link
@@ -105,7 +119,7 @@ export default function MainLayout({
                         : "text-gray-500 hover:text-gray-900"
                     }`}
                   >
-                    Profile
+                    {t("profile")}
                   </Link>
                   <span className="text-sm text-gray-700">
                     Welcome, {session.user?.name}
@@ -115,7 +129,7 @@ export default function MainLayout({
                     onClick={handleSignOut}
                     className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                   >
-                    Sign out
+                    {t("sign_out")}
                   </button>
                 </>
               ) : (
@@ -128,13 +142,13 @@ export default function MainLayout({
                         : "text-gray-500 hover:text-gray-900"
                     }`}
                   >
-                    Sign in
+                    {t("sign_in")}
                   </Link>
                   <Link
                     href={ROUTES.AUTH.REGISTER}
                     className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                   >
-                    Sign up
+                    {t("sign_up")}
                   </Link>
                 </>
               )}

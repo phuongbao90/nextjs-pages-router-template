@@ -12,11 +12,18 @@ import { SessionProvider } from "next-auth/react";
 import MainLayout from "../components/layout/main-layout";
 import { Toaster } from "react-hot-toast";
 import { NuqsAdapter } from "nuqs/adapters/next/pages";
+import { appWithTranslation } from "next-i18next";
+import i18n from "../../next-i18next.config";
+import { useRouter } from "next/router";
+import Head from "next/head";
 
-export default function App({
+export default appWithTranslation(function App({
   Component,
   pageProps: { session, ...pageProps },
 }: AppProps) {
+  const router = useRouter();
+  const locale = router.locale || "vi";
+
   return (
     <SessionProvider session={session}>
       <NuqsAdapter>
@@ -24,6 +31,24 @@ export default function App({
           <PersistGate loading={null} persistor={persistor}>
             <QueryClientProvider client={queryClient}>
               <HydrationBoundary state={pageProps.dehydratedState}>
+                <Head>
+                  <html lang={locale} />
+                  <link
+                    rel="alternate"
+                    hrefLang="en"
+                    href={`https://yourdomain.com/en${router.asPath}`}
+                  />
+                  <link
+                    rel="alternate"
+                    hrefLang="vi"
+                    href={`https://yourdomain.com/vi${router.asPath}`}
+                  />
+                  <link
+                    rel="alternate"
+                    hrefLang="x-default"
+                    href={`https://yourdomain.com/vi${router.asPath}`}
+                  />
+                </Head>
                 <DefaultSeo {...SEO} />
                 <MainLayout>
                   <Component {...pageProps} />
@@ -39,4 +64,4 @@ export default function App({
       </NuqsAdapter>
     </SessionProvider>
   );
-}
+}, i18n);

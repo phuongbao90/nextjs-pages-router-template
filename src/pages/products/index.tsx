@@ -96,8 +96,13 @@ export default function ProductsPage() {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ query }) => {
+export const getServerSideProps: GetServerSideProps = async ({
+  query,
+  locale,
+}) => {
   const queryClient = new QueryClient();
+
+  console.log("locale getServerSideProps ", locale);
 
   const normalizedParams = normalizeProductParams({
     q: query.search as string,
