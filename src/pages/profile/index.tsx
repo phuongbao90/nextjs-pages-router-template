@@ -1,5 +1,5 @@
 import { getSession } from "next-auth/react";
-import { ProtectedRoute } from "../../components/auth/ProtectedRoute";
+import { ProtectedRoute } from "../../components/auth/protected-route";
 import { GetServerSideProps } from "next";
 import { ROUTES } from "../../constants/routes";
 import { getMyProfile } from "../../services/auth/auth.requests";
