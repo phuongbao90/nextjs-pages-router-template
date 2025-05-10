@@ -9,33 +9,31 @@ import { getProducts } from "../../services/products/products.requests";
 import { normalizeProductParams } from "../../services/products/products.utils";
 import { ProductCard } from "../../components/products/product-card";
 import { useQueryState } from "nuqs";
+import { ProductListingSEO } from "../../components/seo/product-listing-seo";
 
-export default function ProductsPage() {
+export default function ProductsPage({
+  data: initialData,
+}: {
+  data: ProductListResponse;
+}) {
   const [searchQuery, setSearchQuery] = useQueryState("search", {
     defaultValue: "",
   });
   const debouncedSearch = useDebounce(searchQuery, 800);
-  const { data, isLoading, error } = useGetProducts({
-    q: debouncedSearch,
-    limit: 10,
-    skip: 0,
-  });
+  const { data, isLoading, error } = useGetProducts(
+    {
+      q: debouncedSearch,
+      limit: 10,
+      skip: 0,
+    },
+    {
+      initialData,
+    }
+  );
 
   return (
     <>
-      <Head>
-        <title>Our Products | Your Company Name</title>
-        <meta
-          name="description"
-          content="Browse our collection of high-quality products. Find the perfect item for your needs."
-        />
-        <meta property="og:title" content="Our Products | Your Company Name" />
-        <meta
-          property="og:description"
-          content="Browse our collection of high-quality products. Find the perfect item for your needs."
-        />
-        <meta property="og:type" content="website" />
-      </Head>
+      <ProductListingSEO />
 
       <div className="bg-white">
         <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
@@ -101,8 +99,6 @@ export const getServerSideProps: GetServerSideProps = async ({
   locale,
 }) => {
   const queryClient = new QueryClient();
-
-  console.log("locale getServerSideProps ", locale);
 
   const normalizedParams = normalizeProductParams({
     q: query.search as string,

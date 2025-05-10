@@ -1,5 +1,4 @@
 import { GetStaticProps, GetStaticPaths } from "next";
-import Head from "next/head";
 import Image from "next/image";
 import { dehydrate, QueryClient } from "@tanstack/react-query";
 import { PRODUCTS_KEYS } from "../../services/products/products.keys";
@@ -10,6 +9,7 @@ import {
 import { useGetProduct } from "../../services/products/products.hooks";
 import { Product } from "../../services/products/products.types";
 import { formatCurrency } from "../../utils/format";
+import { ProductSEO } from "../../components/seo/product-seo";
 
 interface ProductDetailPageProps {
   data: Product;
@@ -26,19 +26,7 @@ export default function ProductDetailPage({
 
   return (
     <>
-      <Head>
-        <title>{product.title} | Your Company Name</title>
-        <meta name="description" content={product.description} />
-        <meta
-          property="og:title"
-          content={`${product.title} | Your Company Name`}
-        />
-        <meta property="og:description" content={product.description} />
-        <meta property="og:type" content="product" />
-        {product.images[0] && (
-          <meta property="og:image" content={product.images[0]} />
-        )}
-      </Head>
+      <ProductSEO />
 
       <div className="bg-white">
         <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">

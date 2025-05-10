@@ -8,12 +8,16 @@ import {
 } from "./products.requests";
 import { normalizeProductParams } from "./products.utils";
 
-export const useGetProducts = (params?: GetProductsParams) => {
+export const useGetProducts = (
+  params?: GetProductsParams,
+  options?: { initialData?: ProductListResponse }
+) => {
   const normalizedParams = normalizeProductParams(params);
   // console.log("normalizedParams useGetProducts ", normalizedParams);
   return useQuery<ProductListResponse, Error, ProductListResponse>({
     queryKey: PRODUCTS_KEYS.LIST(normalizedParams),
     queryFn: () => getProducts(normalizedParams),
+    ...(options?.initialData ? { initialData: options.initialData } : {}),
   });
 };
 
